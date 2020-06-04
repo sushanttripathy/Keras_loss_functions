@@ -1,5 +1,6 @@
 import tensorflow as tf
 from keras import backend as K
+
 def class_weighted_focal_loss(class_weights, gamma=.5):
     class_weights = tf.constant(class_weights, tf.float32)
     gamma = float(gamma)
