@@ -4,7 +4,7 @@ def class_weighted_focal_loss(class_weights, gamma=.5):
     class_weights = tf.constant(class_weights, tf.float32)
     gamma = float(gamma)
 
-    def focal_loss_fixed(y_true, y_pred):
+    def focal_loss_function(y_true, y_pred):
         """
         Focal loss for multi-label classification.
         https://arxiv.org/abs/1708.02002
@@ -45,4 +45,4 @@ def class_weighted_focal_loss(class_weights, gamma=.5):
         focal_loss = tf.reduce_mean(focal_loss_tensor)
         return focal_loss
     
-    return focal_loss_fixed
+    return focal_loss_function
