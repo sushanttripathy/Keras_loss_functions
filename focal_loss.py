@@ -14,7 +14,7 @@ def class_weighted_focal_loss(class_weights, gamma=2.0, class_sparsity_coefficie
 
         Arguments:
             y_true {tensor} : Ground truth labels, with shape (batch_size, number_of_classes).
-            y_pred {tensor} : Model's predictions, with shapen (batch_size, number_of_classes).
+            y_pred {tensor} : Model's predictions, with shape (batch_size, number_of_classes).
 
         Keyword Arguments:
 
