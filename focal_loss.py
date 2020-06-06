@@ -2,7 +2,7 @@ import tensorflow as tf
 from keras import backend as K
 
 
-def class_weighted_focal_loss(class_weights, gamma=.5, class_sparsity_coefficient=1.0):
+def class_weighted_focal_loss(class_weights, gamma=2.0, class_sparsity_coefficient=1.0):
     class_weights = tf.constant(class_weights, tf.float32)
     gamma = float(gamma)
     class_sparsity_coefficient = float(class_sparsity_coefficient)
@@ -20,7 +20,7 @@ def class_weighted_focal_loss(class_weights, gamma=.5, class_sparsity_coefficien
 
             class_weights {list[float]} : Non-zero, positive class-weights. This is used instead 
                                           of Alpha parameter.
-            gamma {float} : The Gamma parameter in Focal Loss. Default value (0.5).
+            gamma {float} : The Gamma parameter in Focal Loss. Default value (2.0).
             class_sparsity_coefficient {float} : The weight of True labels over False labels. Useful
                                                  if True labels are sparse. Default value (1.0).
 
@@ -36,13 +36,13 @@ def class_weighted_focal_loss(class_weights, gamma=.5, class_sparsity_coefficien
         predictions_1 = tf.where(tf.equal(y_true, 1), y_pred, tf.ones_like(y_pred))
         predictions_1 = tf.clip_by_value(predictions_1, K.epsilon(), 1.0 - K.epsilon())
 
-        cross_entropy_1 = tf.multiply(class_sparsity_coefficient, tf.multiply(y_true, -tf.log(predictions_1)))
-        cross_entropy_0 = tf.multiply(tf.subtract(1.0, y_true), -tf.log(tf.subtract(1.0, predictions_0)))
+        cross_entropy_1 = tf.multiply(class_sparsity_coefficient, -tf.log(predictions_1))
+        cross_entropy_0 = -tf.log(tf.subtract(1.0, predictions_0))
         cross_entropy = tf.add(cross_entropy_1, cross_entropy_0)
         class_weighted_cross_entropy = tf.multiply(cross_entropy, class_weights)
 
-        weight_1 = tf.multiply(y_true, tf.pow(tf.subtract(1., predictions_1), gamma))
-        weight_0 = tf.multiply(tf.subtract(1., y_true), tf.pow(predictions_0, gamma))
+        weight_1 = tf.pow(tf.subtract(1., predictions_1), gamma)
+        weight_0 = tf.pow(predictions_0, gamma)
 
         weight = tf.add(weight_0, weight_1)
 
