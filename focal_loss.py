@@ -25,7 +25,7 @@ def class_weighted_focal_loss(class_weights, gamma=2.0, class_sparsity_coefficie
                                                  if True labels are sparse. Default value (1.0).
 
         Returns:
-            loss {tensor} : Single dimensional tensor. Hence, effectively a scalar.
+            loss {tensor} : A tensor of focal loss.
         """
         y_true = tf.convert_to_tensor(y_true, tf.float32)
         y_pred = tf.convert_to_tensor(y_pred, tf.float32)
@@ -47,7 +47,7 @@ def class_weighted_focal_loss(class_weights, gamma=2.0, class_sparsity_coefficie
         weight = tf.add(weight_0, weight_1)
 
         focal_loss_tensor = tf.multiply(weight, class_weighted_cross_entropy)
-        focal_loss = tf.reduce_mean(focal_loss_tensor)
-        return focal_loss
+        # focal_loss = tf.reduce_mean(focal_loss_tensor, axis=1, keepdims=True)
+        return focal_loss_tensor
 
     return focal_loss_function
